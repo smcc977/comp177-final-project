@@ -15,9 +15,6 @@ class Node:
                 neighbors.append(node[0])
         return neighbors
 
-    def printNeighbors(self):
-        print(f"{self.id}: {self.neighbours}")
-
     def addPath(self, path):
         self.cache.append((path, time.time()))
 
@@ -26,3 +23,9 @@ class Node:
         for path, pathTime in self.cache:
             if t - pathTime > self.timeout:
                 self.cache.remove(path)
+
+    def printNeighbors(self):
+        print(f"Node {self.id} neighbours: {self.neighbours}")
+
+    def printCache(self):
+        print(f"Node {self.id} cache: {self.cache}")
