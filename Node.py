@@ -16,7 +16,19 @@ class Node:
         return neighbors
 
     def addPath(self, path):
-        self.cache.append((path, time.time()))
+        self.cache.append((path.reverse(), time.time()))
+
+    def getPath(self, node):
+        for path, t in self.cache:
+            if node in path:
+                return self.cache[path][0][:path.index(node)]
+        return None
+
+    def errorPath(self, link):#link should be an array of the two nodes the connection is between ex. [1, 2]
+        for path, t in self.cache:
+            for i in range(len(path[:-1])):
+                if [path[i], path[i+1]] == link or [path[i+1], path[i]] == link:
+                    self.cache.remove(self.cache[path])
 
     def checkCacheTimeout(self):
         t = time.time()

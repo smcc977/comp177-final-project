@@ -16,6 +16,7 @@ n2 = Node(2, G)
 n3 = Node(3, G)
 n4 = Node(4, G)
 n5 = Node(5, G)
+Nodes = [n1, n2, n3, n4, n5]
 n1.printNeighbors()
 n2.printNeighbors()
 n3.printNeighbors()
@@ -37,6 +38,7 @@ def bfs(graph, startNode, goalNode):
 
         if current not in visited: # Add to path
             visited.add(current)
+            Nodes[current].addPath(path)
             for neighbor in graph.neighbors(current):
                 if neighbor not in visited:
                     queue.append((neighbor, path + [neighbor]))
