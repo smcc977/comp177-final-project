@@ -1,6 +1,8 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from Node import Node
+from collections import deque
+
 
 G = nx.Graph()
 G.add_edges_from([(1, 2), (1, 3), (2, 3), (3, 4), (4, 5)])
@@ -25,3 +27,32 @@ nx.draw_networkx(G, pos, with_labels=True, node_color='skyblue', node_size=1000,
 plt.title("My NetworkX Graph")
 plt.axis('off')  # Hides the Matplotlib axes
 plt.show()
+
+def bfs(graph, startNode, goalNode):
+    visited = set()
+    queue = deque([(startNode, [startNode])])
+
+    while queue:
+        current, path = queue.popleft()
+
+        if current == goalNode: # Found path
+            return path  
+
+        if current not in visited: # Add to path
+            visited.add(current)
+            for neighbor in graph.neighbors(current):
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+
+    return None  # No path found
+
+
+start = 1 # Start Node
+goal = 5 # Goal Node
+
+path = bfs(G, start, goal) # Path from start to goal
+
+if len(path) == 0:
+    print("No path found")
+else:
+    print(f"Path from {start} to {goal}:", path)
