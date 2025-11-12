@@ -24,9 +24,6 @@ n5.printNeighbors()
 
 nx.draw_networkx(G, pos, with_labels=True, node_color='skyblue', node_size=1000, font_size=10, font_weight='bold')
 
-plt.title("My NetworkX Graph")
-plt.axis('off')  # Hides the Matplotlib axes
-plt.show()
 
 def bfs(graph, startNode, goalNode):
     visited = set()
@@ -52,7 +49,11 @@ goal = 5 # Goal Node
 
 path = bfs(G, start, goal) # Path from start to goal
 
-if len(path) == 0:
+if path != None and len(path) == 0:
     print("No path found")
 else:
     print(f"Path from {start} to {goal}:", path)
+
+plt.title("My NetworkX Graph")
+plt.axis('off')  # Hides the Matplotlib axes
+plt.show()

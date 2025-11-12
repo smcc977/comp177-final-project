@@ -1,7 +1,11 @@
+import time
+
 class Node:
-    def __init__(self, id, graph ):
+    def __init__(self, id, graph):
         self.id=id
         self.neighbours=self.findNeighbours(graph)
+        self.cache = []
+        self.timeout = 10
 
     def findNeighbours(self, graph):
         neighbors = []
@@ -13,3 +17,12 @@ class Node:
 
     def printNeighbors(self):
         print(f"{self.id}: {self.neighbours}")
+
+    def addPath(self, path):
+        self.cache.append((path, time.time()))
+
+    def checkCacheTimeout(self):
+        t = time.time()
+        for path, pathTime in self.cache:
+            if t - pathTime > self.timeout:
+                self.cache.remove(path)
