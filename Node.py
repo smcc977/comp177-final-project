@@ -16,7 +16,7 @@ class Node:
         return neighbors
 
     def addPath(self, path):
-        self.cache.append((path.reverse(), time.time()))
+        self.cache.append((path[::-1], time.time()))
 
     def getPath(self, node):
         for path, t in self.cache:
