@@ -5,7 +5,10 @@ from collections import deque
 
 
 G = nx.Graph()
-G.add_edges_from([(1, 2), (1, 3), (2, 3), (3, 4), (4, 5)])
+G.add_edges_from([
+    (1, 2), (1, 3), (2, 3), (3, 4), (4, 5), (3, 6), (4, 6), (5, 6), (5, 7), (6, 7), (7, 8), 
+    (6, 8), (8, 9), (7, 9), (9, 10), (8, 10), (10, 11), (9, 11), (11, 12), (10, 12), (12, 6),                
+])
 
 pos = nx.spring_layout(G)  # Using a spring layout
 # Or define manually:
@@ -16,12 +19,20 @@ n2 = Node(2, G)
 n3 = Node(3, G)
 n4 = Node(4, G)
 n5 = Node(5, G)
-Nodes = [n1, n2, n3, n4, n5]
-n1.printNeighbors()
+n6 = Node(6, G)
+n7 = Node(7, G)
+n8 = Node(8, G)
+n9 = Node(9, G)
+n10 = Node(10, G)
+n11 = Node(11, G)
+n12 = Node(12, G)
+
+Nodes = [n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12]
+"""n1.printNeighbors()
 n2.printNeighbors()
 n3.printNeighbors()
 n4.printNeighbors()
-n5.printNeighbors()
+n5.printNeighbors()"""
 
 nx.draw_networkx(G, pos, with_labels=True, node_color='skyblue', node_size=1000, font_size=10, font_weight='bold')
 
@@ -48,11 +59,13 @@ def bfs(graph, startNode, goalNode):
 
 
 start = 1 # Start Node
-goal = 5 # Goal Node
+goal = 10 # Goal Node
 
 path = bfs(G, start, goal) # Path from start to goal
 
-n5.printCache()
+n6.printCache()
+print(n3.getPath(9))
+
 
 if path != None and len(path) == 0:
     print("No path found")
