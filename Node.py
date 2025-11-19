@@ -16,7 +16,10 @@ class Node:
         return neighbors
 
     def addPath(self, path):
-        self.cache.append((path[::-1], time.time()))
+        if not path[0] == self.id:
+            self.cache.append((path[::-1], time.time()))
+        else:
+            self.cache.append((path, time.time()))
 
     def getPath(self, node):
         for path, t in self.cache:
