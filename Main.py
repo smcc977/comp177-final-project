@@ -34,11 +34,12 @@ def bfs(graph, startNode, goalNode):
         current, path = queue.popleft()
 
         if current == goalNode: # Found path
+            Nodes[current-1].addPath(path)
             return path  
 
         if current not in visited: # Add to path
             visited.add(current)
-            Nodes[current].addPath(path)
+            Nodes[current-1].addPath(path)
             for neighbor in graph.neighbors(current):
                 if neighbor not in visited:
                     queue.append((neighbor, path + [neighbor]))
@@ -50,6 +51,8 @@ start = 1 # Start Node
 goal = 5 # Goal Node
 
 path = bfs(G, start, goal) # Path from start to goal
+
+n5.printCache()
 
 if path != None and len(path) == 0:
     print("No path found")
