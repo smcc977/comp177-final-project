@@ -35,6 +35,8 @@ def bfs(graph, startNode, goalNode):
 
         if current == goalNode: # Found path
             Nodes[current-1].addPath(path)
+            for node in path:
+                Nodes[node-1].addPath(path[path.index(node):])
             return path  
 
         if current not in visited: # Add to path
@@ -52,7 +54,7 @@ goal = 5 # Goal Node
 
 path = bfs(G, start, goal) # Path from start to goal
 
-n5.printCache()
+n3.printCache()
 
 if path != None and len(path) == 0:
     print("No path found")
