@@ -46,6 +46,8 @@ def bfs(graph, startNode, goalNode):
 
         if current == goalNode: # Found path
             Nodes[current-1].addPath(path)
+            for node in path:
+                Nodes[node-1].addPath(path[path.index(node):])
             return path  
 
         if current not in visited: # Add to path
