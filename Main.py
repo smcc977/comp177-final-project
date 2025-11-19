@@ -34,7 +34,8 @@ n3.printNeighbors()
 n4.printNeighbors()
 n5.printNeighbors()"""
 
-nx.draw_networkx(G, pos, with_labels=True, node_color='skyblue', node_size=1000, font_size=10, font_weight='bold')
+#[Transmit/Error, Start, End]
+testingSequence = [[0, 1, 10], [0, 1, 10], [1, 6, 8, 1], [0, 1, 10], [0, 3, 10]]
 
 
 def bfs(graph, startNode, goalNode):
@@ -59,21 +60,60 @@ def bfs(graph, startNode, goalNode):
 
     return None  # No path found
 
-
+'''
 start = 1 # Start Node
 goal = 10 # Goal Node
 
 path = bfs(G, start, goal) # Path from start to goal
 
 n6.printCache()
-print(n3.getPath(9))
+n3.printCache()
+print(n3.getPath(10))
 
+G.remove_edge(6, 8)
+for node in Nodes:
+    node.updateNeighbours(G)
+
+for node in n6.getPath(start):
+    Nodes[node-1].errorPath([6,8])
+
+n6.printCache()
+n3.printCache()
+print(n3.getPath(10))
+
+path = bfs(G, start, goal) # Path from start to goal
+
+n6.printCache()
+n3.printCache()
+print(n3.getPath(10))
 
 if path != None and len(path) == 0:
     print("No path found")
 else:
     print(f"Path from {start} to {goal}:", path)
 
+'''
+for instr in testingSequence:
+    if instr[0] == 0:
+        path = Nodes[instr[1]-1].getPath(instr[2])
+        if path is None:
+            path = bfs(G, instr[1], instr[2])
+        if path != None and len(path) == 0:
+            print("No path found")
+        else:
+            print(f"Path from {instr[1]} to {instr[2]}:", path)
+    else:
+        G.remove_edge(instr[1], instr[2])
+        for node in Nodes:
+            node.updateNeighbours(G)
+
+        for node in Nodes[instr[1]-1].getPath(instr[3]):
+            Nodes[node - 1].errorPath([instr[1],instr[2]])
+
+        print("Removed link", instr[1], "to", instr[2], "add updated caches.")
+
+
+nx.draw_networkx(G, pos, with_labels=True, node_color='skyblue', node_size=1000, font_size=10, font_weight='bold')
 plt.title("My NetworkX Graph")
 plt.axis('off')  # Hides the Matplotlib axes
 plt.show()
