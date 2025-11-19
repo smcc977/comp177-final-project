@@ -21,7 +21,7 @@ class Node:
     def getPath(self, node):
         for path, t in self.cache:
             if node in path:
-                return path[:path.index(node)+1]
+                return path[:path.index(node) + 1]
         return None
 
     def errorPath(self, link):#link should be an array of the two nodes the connection is between ex. [1, 2]
