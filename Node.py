@@ -5,7 +5,7 @@ class Node:
         self.id=id
         self.neighbours=self.findNeighbours(graph)
         self.cache = []
-        self.timeout = 10
+        self.timeout = 1
 
     def findNeighbours(self, graph):
         neighbors = []
@@ -37,6 +37,7 @@ class Node:
                         self.cache.remove((node2, t2))
 
     def getPath(self, node):
+        self.checkCacheTimeout()
         for path, t in self.cache:
             if node in path:
                 return path[:path.index(node) + 1]
@@ -52,6 +53,7 @@ class Node:
         t = time.time()
         for path, pathTime in self.cache:
             if t - pathTime > self.timeout:
+                print(f"Node {self.id} timed out path {path} after {pathTime} seconds")
                 self.cache.remove((path,pathTime))
 
     def printNeighbors(self):
