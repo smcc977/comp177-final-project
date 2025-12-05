@@ -12,7 +12,7 @@ G.add_edges_from([
     (6, 8), (8, 9), (7, 9), (9, 10), (8, 10), (10, 11), (9, 11), (11, 12), (10, 12), (12, 6),                
 ])
 
-pos = nx.spring_layout(G)  # Using a spring layout
+#pos = nx.spring_layout(G)  # Using a spring layout
 # Or define manually:
 # pos = {1: (0, 0), 2: (1, 1), 3: (1, 0), 4: (2, 1), 5: (2, 0)}
 
@@ -133,19 +133,20 @@ else:
 count_searches = 0
 count_routes = 0
 count_dropped = 0
+count_display = 0
 start_time = time.time()
 
 
 for instr in testingSequence:
     if len(instr) == 0:
-        count_searches = count_searches
+        count_display += 1
         print()
-        nx.draw_networkx(G, pos, with_labels=True, node_color='skyblue', node_size=1000, font_size=10,
-                         font_weight='bold')
-        plt.title(f"Search #{count_searches} Graph")
+        nx.draw_networkx(G, nx.spring_layout(G), with_labels=True, node_color='skyblue', node_size=1000, font_size=10, font_weight='bold')
+        plt.title(f"Graph #{count_display}")
         plt.axis('off')  # Hides the Matplotlib axes
-        plt.savefig(f"{count_searches}searchGraph.png")
+        plt.savefig(f"{count_display}Graph.png")
         plt.show(block=False)
+        plt.clf()
 
     elif instr[0] == 0:
         print("Finding path from ", instr[1], "to ", instr[2])
@@ -164,16 +165,15 @@ for instr in testingSequence:
             print(f"Path from {instr[1]} to {instr[2]}:", path)
             count_routes += 1
         print("Took ", round((time.time() - start_time) * 1000000, 3), " ms")
+
     elif instr[0] == 1:
         start_time = time.time()
         G.remove_edge(instr[1], instr[2])
         count_dropped += 1
         for node in Nodes:
             node.updateNeighbours(G)
-
         for node in Nodes[instr[1]-1].getPath(instr[3]):
             Nodes[node - 1].errorPath([instr[1],instr[2]])
-
         print("Removed link", instr[1], "to", instr[2], "add updated caches in nodes", Nodes[instr[1]-1].getPath(instr[3]))
         print("Took ", round((time.time() - start_time) * 1000000, 3), " ms")
 
@@ -183,5 +183,3 @@ for instr in testingSequence:
 print(f"Number of searches: {count_searches}")
 print(f"Number of routes: {count_routes}")
 print(f"Number of dropped: {count_dropped}")
-
-plt.show()
