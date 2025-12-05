@@ -1,3 +1,5 @@
+import time
+
 import networkx as nx
 import matplotlib.pyplot as plt
 from Node import Node
@@ -34,8 +36,8 @@ n3.printNeighbors()
 n4.printNeighbors()
 n5.printNeighbors()"""
 
-#[Transmit/Error, Start, End]
-testingSequence = [
+#[Transmit/Error, Start, End, Origin(if error)]
+testingSequence = [[],
     [0, 1, 10],
     [0, 1, 10],
     [0, 1, 10],
@@ -131,13 +133,23 @@ else:
 count_searches = 0
 count_routes = 0
 count_dropped = 0
+start_time = time.time()
+
 
 for instr in testingSequence:
     if len(instr) == 0:
         count_searches = count_searches
+        print()
+        nx.draw_networkx(G, pos, with_labels=True, node_color='skyblue', node_size=1000, font_size=10,
+                         font_weight='bold')
+        plt.title(f"Search #{count_searches} Graph")
+        plt.axis('off')  # Hides the Matplotlib axes
+        plt.savefig(f"{count_searches}searchGraph.png")
+        plt.show(block=False)
 
     elif instr[0] == 0:
         print("Finding path from ", instr[1], "to ", instr[2])
+        start_time = time.time()
         path = Nodes[instr[1]-1].getPath(instr[2])
         if path is None:
             print("Route Not Cached: Using Route Discovery")
@@ -151,7 +163,9 @@ for instr in testingSequence:
         else:
             print(f"Path from {instr[1]} to {instr[2]}:", path)
             count_routes += 1
+        print("Took ", round((time.time() - start_time) * 1000000, 3), " ms")
     elif instr[0] == 1:
+        start_time = time.time()
         G.remove_edge(instr[1], instr[2])
         count_dropped += 1
         for node in Nodes:
@@ -161,14 +175,13 @@ for instr in testingSequence:
             Nodes[node - 1].errorPath([instr[1],instr[2]])
 
         print("Removed link", instr[1], "to", instr[2], "add updated caches in nodes", Nodes[instr[1]-1].getPath(instr[3]))
-    print()
+        print("Took ", round((time.time() - start_time) * 1000000, 3), " ms")
 
-nx.draw_networkx(G, pos, with_labels=True, node_color='skyblue', node_size=1000, font_size=10, font_weight='bold')
-plt.title("My NetworkX Graph")
-plt.axis('off')  # Hides the Matplotlib axes
-plt.show()
+
 
 
 print(f"Number of searches: {count_searches}")
 print(f"Number of routes: {count_routes}")
 print(f"Number of dropped: {count_dropped}")
+
+plt.show()
