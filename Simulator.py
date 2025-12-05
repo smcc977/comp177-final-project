@@ -52,15 +52,17 @@ def simulator (G, Nodes, testingSequence):
                 print("Route Not Cached: Using Route Discovery")
                 path = bfs(G, Nodes, instr[1], instr[2])
                 count_searches += 1
+                print("BFS Took ", round((time.time() - start_time) * 1000000, 3), " ms")
             else:
                 print("Route found in Cache")
+                print("Cache Lookup Took ", round((time.time() - start_time) * 1000000, 3), " ms")
 
             if path != None and len(path) == 0:
                 print("No path found")
             else:
                 print(f"Path from {instr[1]} to {instr[2]}:", path)
                 count_routes += 1
-            print("Took ", round((time.time() - start_time) * 1000000, 3), " ms")
+
 
         elif instr[0] == 1:
             start_time = time.time()
@@ -71,7 +73,7 @@ def simulator (G, Nodes, testingSequence):
             for node in Nodes[instr[1]-1].getPath(instr[3]):
                 Nodes[node - 1].errorPath([instr[1],instr[2]])
             print("Removed link", instr[1], "to", instr[2], "add updated caches in nodes", Nodes[instr[1]-1].getPath(instr[3]))
-            print("Took ", round((time.time() - start_time) * 1000000, 3), " ms")
+            # print("Took ", round((time.time() - start_time) * 1000000, 3), " ms")
 
     print(f"Number of searches: {count_searches}")
     print(f"Number of routes: {count_routes}")
