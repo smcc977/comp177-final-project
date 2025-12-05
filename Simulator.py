@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import time
 
+# BFS is used to simulate a Route Request
 def bfs(graph, Nodes, startNode, goalNode):
     visited = set()
     queue = deque([(startNode, [startNode])])
@@ -26,24 +27,27 @@ def bfs(graph, Nodes, startNode, goalNode):
 
     return None  # No path found
 
+# Simulator will follow the testing sequence to simulate the behavior of DSR
 def simulator (G, Nodes, testingSequence):
-    count_searches = 0
-    count_routes = 0
-    count_dropped = 0
-    count_display = 0
+    count_searches = 0 #count number of route discoveries performed
+    count_routes = 0 #count number of routes used
+    count_dropped = 0 #count number of edges dropped
+    count_display = 0 #count number of graphs created
 
-
+    # Loop through testing sequence
     for instr in testingSequence:
+        # If there is no instruction display the current graph
         if len(instr) == 0:
-            count_display += 1
             print()
+            count_display += 1
             nx.draw_networkx(G, nx.spring_layout(G), with_labels=True, node_color='skyblue', node_size=1000, font_size=10, font_weight='bold')
             plt.title(f"Graph #{count_display}")
             plt.axis('off')  # Hides the Matplotlib axes
-            plt.savefig(f"{count_display}Graph.png")
-            plt.show(block=False)
-            plt.clf()
+            plt.savefig(f"{count_display}Graph.png") # saves graph
+            plt.show(block=False) # doesn't block program
+            plt.clf() # clears figure
 
+        #Instruction to find path
         elif instr[0] == 0:
             print("Finding path from ", instr[1], "to ", instr[2])
             start_time = time.time()
