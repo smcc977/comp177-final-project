@@ -69,7 +69,7 @@ testingSequence = [[],
 ]
 
 #Run simulator
-simulator(G, Nodes, testingSequence)
+simulator(G, Nodes, testingSequence, "Small")
 
 
 print("Simulating 48 node graph")
@@ -253,4 +253,4 @@ testingSequence = [
 ]
 
 # Run simulator
-simulator(G, Nodes, testingSequence)
+simulator(G, Nodes, testingSequence, "Large")

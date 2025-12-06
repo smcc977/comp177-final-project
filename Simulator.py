@@ -2,6 +2,7 @@ from collections import deque
 from Node import Node
 import matplotlib.pyplot as plt
 import networkx as nx
+import os
 import time
 
 # BFS is used to simulate a Route Request
@@ -28,7 +29,10 @@ def bfs(graph, Nodes, startNode, goalNode):
     return None  # No path found
 
 # Simulator will follow the testing sequence to simulate the behavior of DSR
-def simulator (G, Nodes, testingSequence):
+def simulator (G, Nodes, testingSequence, name):
+    if not os.path.exists(name):
+        os.mkdir(name)
+    os.chdir(name)
     count_searches = 0 #count number of route discoveries performed
     count_routes = 0 #count number of routes used
     count_dropped = 0 #count number of edges dropped
@@ -43,7 +47,7 @@ def simulator (G, Nodes, testingSequence):
             nx.draw_networkx(G, nx.spring_layout(G), with_labels=True, node_color='skyblue', node_size=1000, font_size=10, font_weight='bold')
             plt.title(f"Graph #{count_display}")
             plt.axis('off')  # Hides the Matplotlib axes
-            plt.savefig(f"{count_display}Graph.png") # saves graph
+            plt.savefig(f"{count_display}{name}Graph.png") # saves graph
             plt.show(block=False) # doesn't block program
             plt.clf() # clears figure
 
@@ -56,10 +60,10 @@ def simulator (G, Nodes, testingSequence):
                 print("Route Not Cached: Using Route Discovery")
                 path = bfs(G, Nodes, instr[1], instr[2])
                 count_searches += 1
-                print("BFS Took ", round((time.time() - start_time) * 1000000, 3), " ms")
+                print("BFS Took ", round((time.time() - start_time) * 1000, 6), " ms")
             else:
                 print("Route found in Cache")
-                print("Cache Lookup Took ", round((time.time() - start_time) * 1000000, 3), " ms")
+                print("Cache Lookup Took ", round((time.time() - start_time) * 1000, 6), " ms")
 
             if path != None and len(path) == 0:
                 print("No path found")
@@ -74,11 +78,14 @@ def simulator (G, Nodes, testingSequence):
             count_dropped += 1
             for node in Nodes:
                 node.updateNeighbours(G)
-            for node in Nodes[instr[1]-1].getPath(instr[3]):
-                Nodes[node - 1].errorPath([instr[1],instr[2]])
+            if Nodes[instr[1]-1].getPath(instr[3]) is not None:
+                for node in Nodes[instr[1]-1].getPath(instr[3]):
+                    Nodes[node - 1].errorPath([instr[1],instr[2]])
             print("Removed link", instr[1], "to", instr[2], "add updated caches in nodes", Nodes[instr[1]-1].getPath(instr[3]))
             # print("Took ", round((time.time() - start_time) * 1000000, 3), " ms")
+
 
     print(f"Number of searches: {count_searches}")
     print(f"Number of routes: {count_routes}")
     print(f"Number of dropped: {count_dropped}")
+    os.chdir('..')
